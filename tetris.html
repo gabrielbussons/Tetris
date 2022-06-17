@@ -1,159 +1,168 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Jogo da cobrinha</title>
-</head>
-<body>
- 
+  <head>
+    <title>Jogo da cobrinha!</title>
+  </head>
+  <body>
     <canvas id="stage" width="400" height="800"></canvas>
     <script type="text/javascript">
-        
-        window.onload = function(){
- 
-            var stage = document.getElementById('stage');
-            var ctx = stage.getContext("2d");
+      window.onload = function () {
+        var stage = document.getElementById("stage");
+        var ctx = stage.getContext("2d");
 
-            document.addEventListener("keydown", keyPush); //Evento keydown é um evento javascript que é chamado ao clicar em qualquer tecla e quando acontece vai chamar a função "keyPush". 
+        document.addEventListener("keydown", keyPush); //Evento keydown é um evento javascript que é chamado ao clicar em qualquer tecla e quando acontece vai chamar a função "keyPush".
 
-            setInterval(game, 1000); //Funcao setInterval do javascript, fica chamando uma outra função repetidamente a cada x milisegundos.. no nosso caso, chama a função game a cada 100 milisegundos. 
- 
-            //Posicao (0,0) é o canto esquerdo superior.
+        setInterval(game, 1000); //Funcao setInterval do javascript, fica chamando uma outra função repetidamente a cada x milisegundos.. no nosso caso, chama a função game a cada 100 milisegundos.
 
+        //Posicao (0,0) é o canto esquerdo superior.
 
+        const vel = 40;
+        var tamanhoPecas = 40;
+        var quantidadePecasX = 10;
+        var quantidadePecasY = quantidadePecasX * 2;
+        var posicaoX = stage.width / 2;
+        var posicaoY = 0;
 
-            const vel = 40;
-            var tamanhoPecas = 40;
-            var quantidadePecasX = 10;
-            var quantidadePecasY = quantidadePecasX * 2;
-            var posicaoX =  stage.width/ 2;
-            var posicaoY = 0;
- 
-            var cobra = [];
-            var linha = [0,0,0,0,0,0,0,0,0,0];
-            var tabuleiroCompleto = [];
+        var cobra = [];
+        var linha = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        var tabuleiroCompleto = [];
 
-            for (var i = 0; i < quantidadePecasY; i++){
-                tabuleiroCompleto.push(linha);
-            }  
-
-
-            var pecas = [
-                [[0, 0, 0, 0],  
-                [1, 1, 1, 1],
-                [0, 0, 0, 0],
-                [0, 0, 0, 0]],
-                
-                [[0, 0, 0, 0],  
-                [1, 0, 0, 0],
-                [1, 1, 1, 0],
-                [0, 0, 0, 0]],
-
-                [[0, 0, 0, 0],  
-                [0, 0, 1, 0],
-                [1, 1, 1, 0],
-                [0, 0, 0, 0]],
-
-                [[0, 0, 0, 0],  
-                [0, 1, 1, 0],
-                [0, 1, 1, 0],
-                [0, 0, 0, 0]],
-
-                [[0, 0, 0, 0],  
-                [0, 1, 1, 0],
-                [1, 1, 0, 0],
-                [0, 0, 0, 0]],
-
-                [[0, 0, 0, 0],  
-                [0, 1, 0, 0],
-                [1, 1, 1, 0],
-                [0, 0, 0, 0]],
-
-                [[0, 0, 0, 0],  
-                [1, 1, 0, 0],
-                [0, 1, 1, 0],
-                [0, 0, 0, 0]],
-            ]
-            
-            console.log(tabuleiroCompleto);
-
-            var tail = 3;
-
-            //Retorna as variáveis para seus estados iniciais.
-            function morreu() {
-                tail = 3;
-                posicaoX = posicaoY = 1;
-                appleX = appleY = quantidadePecas/2;
-                velocidadeX = velocidadeY = 0;
-                ultimaTecla = '';
-            }
- 
-            function game(){
-
-                for (var linha = 0; linha < tabuleiroCompleto.length; linha++) {
-                    var linhaAtual = tabuleiroCompleto[linha]
-
-                    for (var coluna = 0; coluna < linhaAtual.length; coluna++) {
-                        if(tabuleiroCompleto[linha][coluna] == 1){
-                            ctx.fillStyle = "red";
-                        } else {
-                            ctx.fillStyle = "black";
-                        }
-                        ctx.fillRect(coluna*tamanhoPecas, linha*tamanhoPecas, tamanhoPecas, tamanhoPecas);
-                    }
-                }
-
-                var pecaAtual = Math.floor(Math.random()*pecas.length)
-
-                ctx.fillStyle = "red";
-
-                ctx.fillRect(posicaoX, posicaoY, tamanhoPecas, tamanhoPecas);
-
-                posicaoY = posicaoY+vel
-
- 
-            }
- 
-            function keyPush(event){
-                //Cada tecla que é precissonada possui um valor keyCode (Pesquisar por keyCode table javascript)
-                switch (event.keyCode) {
-                    case 37: //tecla Left
-                        if(ultimaTecla != 'right' && verificadorReload){
-                            velocidadeX = -vel;
-                            velocidadeY = 0;
-                            ultimaTecla = 'left';
-                            verificadorReload = false;
-                        }
-                        break;
-                    case 38: // tecla up
-                        if(ultimaTecla != 'down' && verificadorReload){
-                            velocidadeX = 0;
-                            velocidadeY = -vel;
-                            ultimaTecla = 'up';
-                            verificadorReload = false;
-                        }
-                        break;
-                    case 39: // tecla right
-                        if(ultimaTecla != 'left' && verificadorReload){
-                            velocidadeX = vel;
-                            velocidadeY = 0;
-                            ultimaTecla = 'right';
-                            verificadorReload = false;
-                        }
-                        break;
-                    case 40: //tecla down
-                        if(ultimaTecla != 'up' && verificadorReload){
-                            velocidadeX = 0;
-                            velocidadeY = vel;
-                            ultimaTecla = 'down';
-                            verificadorReload = false;
-                        }
-                        break;          
-                    default:
-                        break;
-                } 
-            }
+        for (var i = 0; i < quantidadePecasY; i++) {
+          tabuleiroCompleto.push(linha);
         }
- 
+
+        var pecas = [
+          [
+            [0, 0, 0, 0],
+            [1, 1, 1, 1],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+          ],
+
+          [
+            [0, 0, 0, 0],
+            [1, 0, 0, 0],
+            [1, 1, 1, 0],
+            [0, 0, 0, 0],
+          ],
+
+          [
+            [0, 0, 0, 0],
+            [0, 0, 1, 0],
+            [1, 1, 1, 0],
+            [0, 0, 0, 0],
+          ],
+
+          [
+            [0, 0, 0, 0],
+            [0, 1, 1, 0],
+            [0, 1, 1, 0],
+            [0, 0, 0, 0],
+          ],
+
+          [
+            [0, 0, 0, 0],
+            [0, 1, 1, 0],
+            [1, 1, 0, 0],
+            [0, 0, 0, 0],
+          ],
+
+          [
+            [0, 0, 0, 0],
+            [0, 1, 0, 0],
+            [1, 1, 1, 0],
+            [0, 0, 0, 0],
+          ],
+
+          [
+            [0, 0, 0, 0],
+            [1, 1, 0, 0],
+            [0, 1, 1, 0],
+            [0, 0, 0, 0],
+          ],
+        ];
+
+        console.log(tabuleiroCompleto);
+
+        var tail = 3;
+
+        //Retorna as variáveis para seus estados iniciais.
+        function morreu() {
+          tail = 3;
+          posicaoX = posicaoY = 1;
+          appleX = appleY = quantidadePecas / 2;
+          velocidadeX = velocidadeY = 0;
+          ultimaTecla = "";
+        }
+
+        function game() {
+          for (var linha = 0; linha < tabuleiroCompleto.length; linha++) {
+            var linhaAtual = tabuleiroCompleto[linha];
+
+            for (var coluna = 0; coluna < linhaAtual.length; coluna++) {
+              if (tabuleiroCompleto[linha][coluna] == 1) {
+                ctx.fillStyle = "red";
+              } else {
+                ctx.fillStyle = "black";
+              }
+              ctx.fillRect(
+                coluna * tamanhoPecas,
+                linha * tamanhoPecas,
+                tamanhoPecas,
+                tamanhoPecas
+              );
+            }
+          }
+
+          var pecaAtual = Math.floor(Math.random() * pecas.length);
+
+          ctx.fillStyle = "red";
+
+          ctx.fillRect(posicaoX, posicaoY, tamanhoPecas, tamanhoPecas);
+
+          posicaoY = posicaoY + vel;
+        }
+
+        function keyPush(event) {
+          //Cada tecla que é precissonada possui um valor keyCode (Pesquisar por keyCode table javascript)
+          switch (event.keyCode) {
+            case 37: //tecla Left
+              if (ultimaTecla != "right" && verificadorReload) {
+                velocidadeX = -vel;
+                velocidadeY = 0;
+                ultimaTecla = "left";
+                verificadorReload = false;
+              }
+              break;
+            case 38: // tecla up
+              if (ultimaTecla != "down" && verificadorReload) {
+                velocidadeX = 0;
+                velocidadeY = -vel;
+                ultimaTecla = "up";
+                verificadorReload = false;
+              }
+              break;
+            case 39: // tecla right
+              if (ultimaTecla != "left" && verificadorReload) {
+                velocidadeX = vel;
+                velocidadeY = 0;
+                ultimaTecla = "right";
+                verificadorReload = false;
+              }
+              break;
+            case 40: //tecla down
+              if (ultimaTecla != "up" && verificadorReload) {
+                velocidadeX = 0;
+                velocidadeY = vel;
+                ultimaTecla = "down";
+                verificadorReload = false;
+              }
+              break;
+            default:
+              break;
+          }
+        }
+      };
     </script>
-</body>
+  </body>
 </html>
